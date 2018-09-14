@@ -124,37 +124,20 @@ export default class PercentageCircle extends React.PureComponent {
       this.props.seconds !== nextProps.seconds
     ) {
       this.state.circleProgress.stopAnimation()
-      this.setState(getInitialState(nextProps), this.restartAnimation)
+      // this.setState(getInitialState(nextProps), this.restartAnimation)
     }
   }
 
   onCircleAnimated = ({ finished }) => {
     // if animation was interrupted by stopAnimation don't restart it.
-    if (!finished) return
-
-    const secondsElapsed = this.state.secondsElapsed + 1
-    const callback = secondsElapsed < this.props.seconds
-      ? this.restartAnimation
-      : this.props.onTimeElapsed
-    const updatedText = this.props.updateText(
-      secondsElapsed,
-      this.props.seconds,
-    )
-    this.setState(
-      {
-        ...getInitialState(this.props),
-        secondsElapsed,
-        text: updatedText,
-      },
-      callback,
-    )
+    if (finished) this.props.nextSlide();
   };
 
   restartAnimation = () => {
     this.state.circleProgress.stopAnimation()
     Animated.timing(this.state.circleProgress, {
       toValue: 100,
-      duration: 1000,
+      duration: 1000 * this.props.seconds,
       easing: Easing.linear,
     }).start(this.onCircleAnimated)
   };
@@ -207,9 +190,6 @@ export default class PercentageCircle extends React.PureComponent {
           },
         ]}
       >
-        <Text style={this.props.textStyle}>
-          {this.state.text}
-        </Text>
       </View>
     )
   }
