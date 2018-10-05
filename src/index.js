@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  I18nManager,
   ViewPropTypes,
 } from 'react-native'
 import PropTypes from 'prop-types'
@@ -30,11 +31,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+    right: 0,
   },
   halfCircle: {
     position: 'absolute',
     top: 0,
     left: 0,
+    right: 0,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
     backgroundColor: '#f00',
@@ -130,7 +133,7 @@ export default class PercentageCircle extends React.PureComponent {
 
   onCircleAnimated = ({ finished }) => {
     // if animation was interrupted by stopAnimation don't restart it.
-    if (finished) this.props.nextSlide();
+    if (finished && this.props.autoplay) this.props.nextSlide();
   };
 
   restartAnimation = () => {
@@ -164,9 +167,9 @@ export default class PercentageCircle extends React.PureComponent {
               borderRadius: radius,
               backgroundColor,
               transform: [
-                { translateX: radius / 2 },
+                { translateX: I18nManager.isRTL ? -radius / 2 : radius / 2 },
                 { rotate },
-                { translateX: -radius / 2 },
+                { translateX: I18nManager.isRTL ? radius / 2 : -radius / 2 },
               ],
             },
           ]}
